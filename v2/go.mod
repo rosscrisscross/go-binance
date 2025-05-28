@@ -3,7 +3,6 @@ module github.com/rosscrisscross/go-binance/v2
 go 1.18
 
 require (
-	github.com/adshao/go-binance/v2 v2.8.2
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0
@@ -14,8 +13,9 @@ require (
 )
 
 require (
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/kr/text v0.1.0 // indirect
+	github.com/kr/pretty v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
