@@ -25,16 +25,16 @@ type CreateTravelRuleWithdrawService struct {
 }
 
 type Questionnaire struct {
-	IsAddressOwner int    `json:"isAddressOwner"`
-	BNFType        int    `json:"bnfType,omitempty"`
-	BNFName        string `json:"bnfName,omitempty"`
-	Country        string `json:"country,omitempty"`
-	BNFCorpName    string `json:"bnfCorpName,omitempty"`
-	BNFCorpCountry string `json:"bnfCorpCountry,omitempty"`
-	SendTo         int    `json:"sendTo"`
-	VASP           string `json:"vasp,omitempty"`
-	VASPName       string `json:"vaspName,omitempty"`
-	Declaration    bool   `json:"declaration"`
+	IsAddressOwner int     `json:"isAddressOwner"`
+	BNFType        *int    `json:"bnfType,omitempty"`
+	BNFName        *string `json:"bnfName,omitempty"`
+	Country        *string `json:"country,omitempty"`
+	BNFCorpName    *string `json:"bnfCorpName,omitempty"`
+	BNFCorpCountry *string `json:"bnfCorpCountry,omitempty"`
+	SendTo         int     `json:"sendTo"`
+	VASP           *string `json:"vasp,omitempty"`
+	VASPName       *string `json:"vaspName,omitempty"`
+	Declaration    bool    `json:"declaration"`
 }
 
 // Coin sets the coin parameter (MANDATORY).
