@@ -21,6 +21,8 @@ type CreateTravelRuleWithdrawService struct {
 	transactionFeeFlag *bool   // When making internal transfer, true for returning the fee to the destination account; false for returning the fee back to the departure account. Default false.
 	name               *string // Description of the address. Address book cap is 200, space in name should be encoded into %20
 	walletType         *int    // The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
+	timestamp          int64
+	recvWindow         int64
 	questionnaire      Questionnaire
 }
 
@@ -90,6 +92,16 @@ func (s *CreateTravelRuleWithdrawService) WalletType(walletType int) *CreateTrav
 	return s
 }
 
+func (s *CreateTravelRuleWithdrawService) Timestamp(timestamp int64) *CreateTravelRuleWithdrawService {
+	s.timestamp = timestamp
+	return s
+}
+
+func (s *CreateTravelRuleWithdrawService) RecvWindow(recvWindow int64) *CreateTravelRuleWithdrawService {
+	s.recvWindow = recvWindow
+	return s
+}
+
 func (s *CreateTravelRuleWithdrawService) Questionnaire(questionnaire Questionnaire) *CreateTravelRuleWithdrawService {
 	s.questionnaire = questionnaire
 	return s
@@ -112,6 +124,8 @@ func (s *CreateTravelRuleWithdrawService) Do(ctx context.Context, opts ...Reques
 	r.setParam("coin", s.coin)
 	r.setParam("address", s.address)
 	r.setParam("amount", s.amount)
+	r.setParam("timestamp", s.timestamp)
+	r.setParam("recvWindow", s.recvWindow)
 
 	if v := s.withdrawOrderID; v != nil {
 		r.setParam("withdrawOrderId", *v)
