@@ -24,10 +24,10 @@ type CreateTravelRuleWithdrawService struct {
 	walletType         *int    // The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
 	timestamp          int64
 	recvWindow         int64
-	questionnaire      Questionnaire
+	questionnaire      WithdrawalQuestionnaire
 }
 
-type Questionnaire struct {
+type WithdrawalQuestionnaire struct {
 	IsAddressOwner int     `json:"isAddressOwner"`
 	BNFType        *int    `json:"bnfType,omitempty"`
 	BNFName        *string `json:"bnfName,omitempty"`
@@ -103,12 +103,12 @@ func (s *CreateTravelRuleWithdrawService) RecvWindow(recvWindow int64) *CreateTr
 	return s
 }
 
-func (s *CreateTravelRuleWithdrawService) Questionnaire(questionnaire Questionnaire) *CreateTravelRuleWithdrawService {
+func (s *CreateTravelRuleWithdrawService) Questionnaire(questionnaire WithdrawalQuestionnaire) *CreateTravelRuleWithdrawService {
 	s.questionnaire = questionnaire
 	return s
 }
 
-// Do sends the request.
+// Do sends the travel rule withdraw request.
 func (s *CreateTravelRuleWithdrawService) Do(ctx context.Context, opts ...RequestOption) (*CreateTravelRuleWithdrawResponse, error) {
 	r := &request{
 		method:   http.MethodPost,
@@ -165,4 +165,171 @@ type CreateTravelRuleWithdrawResponse struct {
 	ID       int    `json:"trId"`
 	Accepted bool   `json:"accepted"`
 	Info     string `json:"info"`
+}
+
+// ListTravelRuleDepositsService fetches deposits that require travel rule information
+//
+// See https://developers.binance.com/docs/wallet/travel-rule/deposit-history
+type ListTravelRuleDepositsService struct {
+	c                    *Client
+	trID                 *string
+	txID                 *string
+	tranID               *string
+	network              *string
+	coin                 *string
+	travelRuleStatus     *int
+	pendingQuestionnaire *bool
+	startTime            *int64
+	endTime              *int64
+	offset               *int
+	limit                *int
+	timestamp            int64
+}
+
+// TRID sets the TR ID parameter
+func (s *ListTravelRuleDepositsService) TRID(v string) *ListTravelRuleDepositsService {
+	s.trID = &v
+	return s
+}
+
+// TXID sets the TX ID parameter
+func (s *ListTravelRuleDepositsService) TXID(v string) *ListTravelRuleDepositsService {
+	s.txID = &v
+	return s
+}
+
+// TranID sets the transaction ID parameter
+func (s *ListTravelRuleDepositsService) TranID(v string) *ListTravelRuleDepositsService {
+	s.tranID = &v
+	return s
+}
+
+// Network sets the network parameter
+func (s *ListTravelRuleDepositsService) Network(v string) *ListTravelRuleDepositsService {
+	s.network = &v
+	return s
+}
+
+// Coin sets the coin parameter
+func (s *ListTravelRuleDepositsService) Coin(v string) *ListTravelRuleDepositsService {
+	s.coin = &v
+	return s
+}
+
+// TravelRuleStatus sets the travel rule status parameter
+func (s *ListTravelRuleDepositsService) TravelRuleStatus(v int) *ListTravelRuleDepositsService {
+	s.travelRuleStatus = &v
+	return s
+}
+
+// PendingQuestionnaire sets the pending questionnaire parameter
+func (s *ListTravelRuleDepositsService) PendingQuestionnaire(v bool) *ListTravelRuleDepositsService {
+	s.pendingQuestionnaire = &v
+	return s
+}
+
+// StartTime sets the start time parameter
+func (s *ListTravelRuleDepositsService) StartTime(v int64) *ListTravelRuleDepositsService {
+	s.startTime = &v
+	return s
+}
+
+// EndTime sets the end time parameter
+func (s *ListTravelRuleDepositsService) EndTime(v int64) *ListTravelRuleDepositsService {
+	s.endTime = &v
+	return s
+}
+
+// Offset sets the offset parameter
+func (s *ListTravelRuleDepositsService) Offset(v int) *ListTravelRuleDepositsService {
+	s.offset = &v
+	return s
+}
+
+// Limit sets the limit parameter
+func (s *ListTravelRuleDepositsService) Limit(v int) *ListTravelRuleDepositsService {
+	s.limit = &v
+	return s
+}
+
+// Timestamp sets the timestamp parameter
+func (s *ListTravelRuleDepositsService) Timestamp(v int64) *ListTravelRuleDepositsService {
+	s.timestamp = v
+	return s
+}
+
+func (s *ListTravelRuleDepositsService) Do(ctx context.Context, opts ...RequestOption) ([]*TravelRuleDeposit, error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/sapi/v1/localentity/deposit/history",
+		secType:  secTypeSigned,
+	}
+
+	r.setParam("timestamp", s.timestamp)
+
+	if v := s.trID; v != nil {
+		r.setParam("trId", *v)
+	}
+	if v := s.txID; v != nil {
+		r.setParam("txId", *v)
+	}
+	if v := s.tranID; v != nil {
+		r.setParam("tranId", *v)
+	}
+	if v := s.network; v != nil {
+		r.setParam("network", *v)
+	}
+	if v := s.coin; v != nil {
+		r.setParam("coin", *v)
+	}
+	if v := s.travelRuleStatus; v != nil {
+		r.setParam("travelRuleStatus", *v)
+	}
+	if v := s.pendingQuestionnaire; v != nil {
+		r.setParam("pendingQuestionnaire", *v)
+	}
+	if v := s.startTime; v != nil {
+		r.setParam("startTime", *v)
+	}
+	if v := s.endTime; v != nil {
+		r.setParam("endTime", *v)
+	}
+	if v := s.offset; v != nil {
+		r.setParam("offset", *v)
+	}
+	if v := s.limit; v != nil {
+		r.setParam("limit", *v)
+	}
+
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]*TravelRuleDeposit, 0)
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type TravelRuleDeposit struct {
+	TrID                 int64   `json:"trId"`
+	TranID               int64   `json:"tranId"`
+	Amount               string  `json:"amount"`
+	Coin                 string  `json:"coin"`
+	Network              string  `json:"network"`
+	DepositStatus        int     `json:"depositStatus"`
+	TravelRuleStatus     int     `json:"travelRuleStatus"`
+	Address              string  `json:"address"`
+	AddressTag           string  `json:"addressTag"`
+	TxID                 string  `json:"txId"`
+	InsertTime           int64   `json:"insertTime"`
+	TransferType         int     `json:"transferType"`
+	ConfirmTimes         string  `json:"confirmTimes"`
+	UnlockConfirm        int     `json:"unlockConfirm"`
+	WalletType           int     `json:"walletType"`
+	RequireQuestionnaire bool    `json:"requireQuestionnaire"`
+	Questionnaire        *string `json:"questionnaire"`
 }
