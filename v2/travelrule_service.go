@@ -339,7 +339,7 @@ type TravelRuleDeposit struct {
 // See https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info
 type ProvideTravelRuleDepositInfoService struct {
 	c             *Client
-	tranID        string
+	tranID        int64
 	questionnaire DepositQuestionnaire
 	timestamp     int64
 }
@@ -358,7 +358,7 @@ type DepositQuestionnaire struct {
 }
 
 // TranID sets the TR ID parameter
-func (s *ProvideTravelRuleDepositInfoService) TranID(v string) *ProvideTravelRuleDepositInfoService {
+func (s *ProvideTravelRuleDepositInfoService) TranID(v int64) *ProvideTravelRuleDepositInfoService {
 	s.tranID = v
 	return s
 }
