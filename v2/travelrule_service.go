@@ -315,21 +315,98 @@ func (s *ListTravelRuleDepositsService) Do(ctx context.Context, opts ...RequestO
 }
 
 type TravelRuleDeposit struct {
-	TrID                 int64   `json:"trId"`
-	TranID               int64   `json:"tranId"`
-	Amount               string  `json:"amount"`
-	Coin                 string  `json:"coin"`
-	Network              string  `json:"network"`
-	DepositStatus        int     `json:"depositStatus"`
-	TravelRuleStatus     int     `json:"travelRuleStatus"`
-	Address              string  `json:"address"`
-	AddressTag           string  `json:"addressTag"`
-	TxID                 string  `json:"txId"`
-	InsertTime           int64   `json:"insertTime"`
-	TransferType         int     `json:"transferType"`
-	ConfirmTimes         string  `json:"confirmTimes"`
-	UnlockConfirm        int     `json:"unlockConfirm"`
-	WalletType           int     `json:"walletType"`
-	RequireQuestionnaire bool    `json:"requireQuestionnaire"`
-	Questionnaire        *string `json:"questionnaire"`
+	TrID                 int64  `json:"trId"`
+	TranID               int64  `json:"tranId"`
+	Amount               string `json:"amount"`
+	Coin                 string `json:"coin"`
+	Network              string `json:"network"`
+	DepositStatus        int    `json:"depositStatus"`
+	TravelRuleStatus     int    `json:"travelRuleStatus"`
+	Address              string `json:"address"`
+	AddressTag           string `json:"addressTag"`
+	TxID                 string `json:"txId"`
+	InsertTime           int64  `json:"insertTime"`
+	TransferType         int    `json:"transferType"`
+	ConfirmTimes         string `json:"confirmTimes"`
+	UnlockConfirm        int    `json:"unlockConfirm"`
+	WalletType           int    `json:"walletType"`
+	RequireQuestionnaire bool   `json:"requireQuestionnaire"`
+	Questionnaire        any    `json:"questionnaire"`
+}
+
+// ProvideTravelRuleDepositInfoService submits travel rule information for a deposit
+//
+// See https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info
+type ProvideTravelRuleDepositInfoService struct {
+	c             *Client
+	tranID        string
+	questionnaire DepositQuestionnaire
+	timestamp     int64
+}
+
+type DepositQuestionnaire struct {
+	DepositOriginator int     `json:"depositOriginator"`
+	OrgType           *int    `json:"orgType"`
+	OrgName           *string `json:"orgName"`
+	Country           *string `json:"country"`
+	CorpName          *string `json:"corpName"`
+	CorpCountry       *string `json:"corpCountry"`
+	ReceiveFrom       *int    `json:"receiveFrom"`
+	VASP              *int    `json:"vasp"`
+	VASPName          *int    `json:"vaspName"`
+	Declaration       bool    `json:"declaration"`
+}
+
+// TranID sets the TR ID parameter
+func (s *ProvideTravelRuleDepositInfoService) TranID(v string) *ProvideTravelRuleDepositInfoService {
+	s.tranID = v
+	return s
+}
+
+// Questionnaire sets the questionnaire parameter
+func (s *ProvideTravelRuleDepositInfoService) Questionnaire(v DepositQuestionnaire) *ProvideTravelRuleDepositInfoService {
+	s.questionnaire = v
+	return s
+}
+
+// Timestamp sets the questionnaire parameter
+func (s *ProvideTravelRuleDepositInfoService) Timestamp(v int64) *ProvideTravelRuleDepositInfoService {
+	s.timestamp = v
+	return s
+}
+
+// Do provides travel rule info to a deposit.
+func (s *ProvideTravelRuleDepositInfoService) Do(ctx context.Context, opts ...RequestOption) (*ProvideTravelRuleDepositInfoResponse, error) {
+	r := &request{
+		method:   http.MethodPut,
+		endpoint: "/sapi/v1/localentity/deposit/provide-info",
+		secType:  secTypeSigned,
+	}
+
+	questionnaireJSON, err := json.Marshal(s.questionnaire)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal questionnaire: %v", err)
+	}
+
+	r.setParam("tranId", s.tranID)
+	r.setParam("questionnaire", url.QueryEscape(string(questionnaireJSON)))
+	r.setParam("timestamp", s.timestamp)
+
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &ProvideTravelRuleDepositInfoResponse{}
+	if err := json.Unmarshal(data, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type ProvideTravelRuleDepositInfoResponse struct {
+	ID       int    `json:"trId"`
+	Accepted bool   `json:"accepted"`
+	Info     string `json:"info"`
 }

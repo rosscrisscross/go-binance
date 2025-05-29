@@ -772,6 +772,11 @@ func (c *Client) NewListTravelRuleDepositsService() *ListTravelRuleDepositsServi
 	return &ListTravelRuleDepositsService{c: c}
 }
 
+// NewProvideTravelRuleService init providing travel rule info service
+func (c *Client) NewProvideTravelRuleInfoService() *ProvideTravelRuleDepositInfoService {
+	return &ProvideTravelRuleDepositInfoService{c: c}
+}
+
 // NewGetDepositAddressService init getting deposit address service
 func (c *Client) NewGetDepositAddressService() *GetDepositsAddressService {
 	return &GetDepositsAddressService{c: c}
