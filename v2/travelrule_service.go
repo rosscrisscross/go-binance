@@ -315,23 +315,23 @@ func (s *ListTravelRuleDepositsService) Do(ctx context.Context, opts ...RequestO
 }
 
 type TravelRuleDeposit struct {
-	TrID                 int64  `json:"trId"`
-	TranID               int64  `json:"tranId"`
-	Amount               string `json:"amount"`
-	Coin                 string `json:"coin"`
-	Network              string `json:"network"`
-	DepositStatus        int    `json:"depositStatus"`
-	TravelRuleStatus     int    `json:"travelRuleStatus"`
-	Address              string `json:"address"`
-	AddressTag           string `json:"addressTag"`
-	TxID                 string `json:"txId"`
-	InsertTime           int64  `json:"insertTime"`
-	TransferType         int    `json:"transferType"`
-	ConfirmTimes         string `json:"confirmTimes"`
-	UnlockConfirm        int    `json:"unlockConfirm"`
-	WalletType           int    `json:"walletType"`
-	RequireQuestionnaire bool   `json:"requireQuestionnaire"`
-	Questionnaire        any    `json:"questionnaire"`
+	TrID                 int64                  `json:"trId"`
+	TranID               int64                  `json:"tranId"`
+	Amount               string                 `json:"amount"`
+	Coin                 string                 `json:"coin"`
+	Network              string                 `json:"network"`
+	DepositStatus        int                    `json:"depositStatus"`
+	TravelRuleStatus     int                    `json:"travelRuleStatus"`
+	Address              string                 `json:"address"`
+	AddressTag           string                 `json:"addressTag"`
+	TxID                 string                 `json:"txId"`
+	InsertTime           int64                  `json:"insertTime"`
+	TransferType         int                    `json:"transferType"`
+	ConfirmTimes         string                 `json:"confirmTimes"`
+	UnlockConfirm        int                    `json:"unlockConfirm"`
+	WalletType           int                    `json:"walletType"`
+	RequireQuestionnaire bool                   `json:"requireQuestionnaire"`
+	Questionnaire        map[string]interface{} `json:"questionnaire"`
 }
 
 // ProvideTravelRuleDepositInfoService submits travel rule information for a deposit
