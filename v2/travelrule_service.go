@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // Create CreateTravelRuleWithdrawService submits a withdraw request along with travel rule information.
@@ -120,7 +121,7 @@ func (s *CreateTravelRuleWithdrawService) Do(ctx context.Context, opts ...Reques
 		return nil, fmt.Errorf("failed to marshal questionnaire: %v", err)
 	}
 
-	r.setParam("questionnaire", string(questionnaireJSON))
+	r.setParam("questionnaire", url.QueryEscape(string(questionnaireJSON)))
 	r.setParam("coin", s.coin)
 	r.setParam("address", s.address)
 	r.setParam("amount", s.amount)
@@ -161,5 +162,7 @@ func (s *CreateTravelRuleWithdrawService) Do(ctx context.Context, opts ...Reques
 
 // CreateTravelRuleWithdrawResponse represents a response from CreateTravelRuleWithdrawService.
 type CreateTravelRuleWithdrawResponse struct {
-	ID string `json:"id"`
+	ID       int    `json:"trId"`
+	Accepted bool   `json:"accepted"`
+	Info     string `json:"info"`
 }
