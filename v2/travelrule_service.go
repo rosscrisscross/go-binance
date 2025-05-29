@@ -351,9 +351,9 @@ type DepositQuestionnaire struct {
 	Country           *string `json:"country"`
 	CorpName          *string `json:"corpName"`
 	CorpCountry       *string `json:"corpCountry"`
-	ReceiveFrom       *int    `json:"receiveFrom"`
-	VASP              *int    `json:"vasp"`
-	VASPName          *int    `json:"vaspName"`
+	ReceiveFrom       int     `json:"receiveFrom"`
+	VASP              *string `json:"vasp"`
+	VASPName          *string `json:"vaspName"`
 	Declaration       bool    `json:"declaration"`
 }
 
