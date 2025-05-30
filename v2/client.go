@@ -788,7 +788,7 @@ func (c *Client) NewCreateWithdrawService() *CreateWithdrawService {
 }
 
 // NewListTravelRuleWithdrawals init creating list travelrule withdraw service
-func (c *Client) NewListTravelRuleWithdrawals() *ListTravelRuleWithdrawalsService {
+func (c *Client) NewListTravelRuleWithdrawalsService() *ListTravelRuleWithdrawalsService {
 	return &ListTravelRuleWithdrawalsService{c: c}
 }
 
