@@ -166,7 +166,7 @@ type TravelRuleWithdrawal struct {
 	Address           string                 `json:"address"`
 	AddressTag        string                 `json:"addressTag"`
 	TxID              string                 `json:"txId"`
-	ApplyTime         string                 `json:"applyTime"`
+	ApplyTime         int64                  `json:"applyTime"`
 	Network           string                 `json:"network"`
 	TransferType      int                    `json:"transferType"`
 	WithdrawalOrderID string                 `json:"withdrawOrderId"`
@@ -175,7 +175,7 @@ type TravelRuleWithdrawal struct {
 	WalletType        int                    `json:"walletType"`
 	TxKey             string                 `json:"txKey"`
 	Questionnaire     map[string]interface{} `json:"questionnaire"`
-	CompleteTime      string                 `json:"completeTime"`
+	CompleteTime      int64                  `json:"completeTime"`
 }
 
 // Create CreateTravelRuleWithdrawService submits a withdraw request along with travel rule information.
