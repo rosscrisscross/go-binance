@@ -8,6 +8,176 @@ import (
 	"net/url"
 )
 
+// ListTravelRuleWithdrawalsService fetches withdrawals with travel rule information
+//
+// See https://developers.binance.com/docs/wallet/travel-rule/withdraw-history
+type ListTravelRuleWithdrawalsService struct {
+	c                *Client
+	trID             *string
+	txID             *string
+	withdrawOrderID  *string
+	network          *string
+	coin             *string
+	travelRuleStatus *int
+	offset           *int
+	limit            *int
+	startTime        *int64
+	endTime          *int64
+	receiveWindow    *int64
+	timestamp        int64
+}
+
+// TRID sets the TR ID parameter
+func (s *ListTravelRuleWithdrawalsService) TRID(v string) *ListTravelRuleWithdrawalsService {
+	s.trID = &v
+	return s
+}
+
+// TxID sets the Tx ID parameter
+func (s *ListTravelRuleWithdrawalsService) TxID(v string) *ListTravelRuleWithdrawalsService {
+	s.txID = &v
+	return s
+}
+
+// WithdrawalOrderID sets the withdrawal order ID parameter
+func (s *ListTravelRuleWithdrawalsService) WithdrawalOrderID(v string) *ListTravelRuleWithdrawalsService {
+	s.withdrawOrderID = &v
+	return s
+}
+
+// Network sets the network parameter
+func (s *ListTravelRuleWithdrawalsService) Network(v string) *ListTravelRuleWithdrawalsService {
+	s.network = &v
+	return s
+}
+
+// Coin sets the coin parameter
+func (s *ListTravelRuleWithdrawalsService) Coin(v string) *ListTravelRuleWithdrawalsService {
+	s.coin = &v
+	return s
+}
+
+// TravelRuleStatus sets the travel rule status parameter
+func (s *ListTravelRuleWithdrawalsService) TravelRuleStatus(v int) *ListTravelRuleWithdrawalsService {
+	s.travelRuleStatus = &v
+	return s
+}
+
+// Offset sets the offset parameter
+func (s *ListTravelRuleWithdrawalsService) Offset(v int) *ListTravelRuleWithdrawalsService {
+	s.offset = &v
+	return s
+}
+
+// Limit sets the offset parameter
+func (s *ListTravelRuleWithdrawalsService) Limit(v int) *ListTravelRuleWithdrawalsService {
+	s.limit = &v
+	return s
+}
+
+// StartTime sets the start time parameter
+func (s *ListTravelRuleWithdrawalsService) StartTime(v int64) *ListTravelRuleWithdrawalsService {
+	s.startTime = &v
+	return s
+}
+
+// EndTime sets the end time parameter
+func (s *ListTravelRuleWithdrawalsService) EndTime(v int64) *ListTravelRuleWithdrawalsService {
+	s.endTime = &v
+	return s
+}
+
+// EndTime sets the end time parameter
+func (s *ListTravelRuleWithdrawalsService) RecvWindow(v int64) *ListTravelRuleWithdrawalsService {
+	s.receiveWindow = &v
+	return s
+}
+
+// Timestamp sets the timestamp parameter
+func (s *ListTravelRuleWithdrawalsService) Timestamp(v int64) *ListTravelRuleWithdrawalsService {
+	s.timestamp = v
+	return s
+}
+
+func (s *ListTravelRuleWithdrawalsService) Do(ctx context.Context, opts ...RequestOption) ([]*TravelRuleWithdrawal, error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/sapi/v1/localentity/withdraw/history",
+		secType:  secTypeSigned,
+	}
+
+	r.setParam("timestamp", s.timestamp)
+
+	if v := s.trID; v != nil {
+		r.setParam("trId", *v)
+	}
+	if v := s.txID; v != nil {
+		r.setParam("txId", *v)
+	}
+	if v := s.withdrawOrderID; v != nil {
+		r.setParam("withdrawOrderId", *v)
+	}
+	if v := s.network; v != nil {
+		r.setParam("network", *v)
+	}
+	if v := s.coin; v != nil {
+		r.setParam("coin", *v)
+	}
+	if v := s.travelRuleStatus; v != nil {
+		r.setParam("travelRuleStatus", *v)
+	}
+	if v := s.startTime; v != nil {
+		r.setParam("startTime", *v)
+	}
+	if v := s.endTime; v != nil {
+		r.setParam("endTime", *v)
+	}
+	if v := s.offset; v != nil {
+		r.setParam("offset", *v)
+	}
+	if v := s.limit; v != nil {
+		r.setParam("limit", *v)
+	}
+	if v := s.receiveWindow; v != nil {
+		r.setParam("receiveWindow", *v)
+	}
+
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]*TravelRuleWithdrawal, 0)
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type TravelRuleWithdrawal struct {
+	ID                string                 `json:"id"`
+	TrID              int64                  `json:"trId"`
+	Amount            string                 `json:"amount"`
+	TransactionFee    string                 `json:"transactionFee"`
+	Coin              string                 `json:"coin"`
+	WithdrawalStatus  int                    `json:"withdrawalStatus"`
+	TravelRuleStatus  int                    `json:"travelRuleStatus"`
+	Address           string                 `json:"address"`
+	AddressTag        string                 `json:"addressTag"`
+	TxID              string                 `json:"txId"`
+	ApplyTime         string                 `json:"applyTime"`
+	Network           string                 `json:"network"`
+	TransferType      int                    `json:"transferType"`
+	WithdrawalOrderID string                 `json:"withdrawOrderId"`
+	Info              string                 `json:"info"`
+	ConfirmNo         int                    `json:"confirmNo"`
+	WalletType        int                    `json:"walletType"`
+	TxKey             string                 `json:"txKey"`
+	Questionnaire     map[string]interface{} `json:"questionnaire"`
+	CompleteTime      string                 `json:"completeTime"`
+}
+
 // Create CreateTravelRuleWithdrawService submits a withdraw request along with travel rule information.
 //
 // See https://developers.binance.com/docs/wallet/travel-rule/withdraw
